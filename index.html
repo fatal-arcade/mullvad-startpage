@@ -131,19 +131,21 @@
         <!-- Browser Search Bar -->
         <form id="searchForm" class="search-form" action="https://duckduckgo.com/" method="get" target="_blank">
             
-            <img id="engineIcon" src="duckduckgo.png" class="engine-icon-indicator" alt="Engine Icon">
             <input type="text" id="searchInput" name="q" class="search-input" placeholder="Search the web..." required autocomplete="off" autofocus>
             
             <div class="engine-selector-wrapper">
                 <!-- Favicon gets swapped here instantly by JavaScript -->
                 <select id="engineSelect" class="engine-select">
                     <option value="duckduckgo">
+                        <img src="duckduckgo.png" class="engine-icon-indicator" alt="-">                        
                         DuckDuckGo
                     </option>
                     <option value="brave">
+                        <img src="brave.png" class="engine-icon-indicator" alt="-">
                         Brave
                     </option>
                     <option value="startpage">
+                        <img src="startpage.png" class="engine-icon-indicator" alt="-">
                         Startpage
                     </option>
                 </select>
