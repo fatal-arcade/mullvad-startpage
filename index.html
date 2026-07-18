@@ -13,56 +13,44 @@
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             
-            /* Background image from your repository */
+            /* Background image applied directly to the document body */
             background-image: url('mbg.jpg');
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
         }
 
-        /* Central Layout Container to stack the Clock and Search Bar */
-        .center-container {
+        /* Browser Search Bar Container */
+        .browser-search-bar {
             position: fixed;
-            top: 10%; /* Kept at 10% down from the top */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 650px;
+            top: 10%;
+            left: 0;
+            width: 100%;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             z-index: 1000;
         }
 
-        /* Live Clock Styling */
-        .digital-clock {
-            font-size: 72px;
-            font-weight: 300;
-            color: #ffffff;
-            margin-bottom: 25px; /* Spacing between clock and search bar */
-            text-shadow: 0px 4px 12px rgba(0, 0, 0, 0.6);
-            letter-spacing: 2px;
-        }
-
         /* Form wrapper styled as a pill */
         .search-form {
-            width: 100%;
+            width: 90%;
+            max-width: 650px;
             display: flex;
             align-items: center;
             position: relative;
-            background-color: rgba(30, 30, 30, 0.75); /* Semi-transparent backing */
-            backdrop-filter: blur(10px); /* Frosted glass effect */
+            background-color: rgba(30, 30, 30, 0.75);
+            backdrop-filter: blur(10px);
             padding: 6px;
             border-radius: 30px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            box-sizing: border-box;
         }
 
         /* Textfield Input */
         .search-input {
             width: 100%;
-            padding: 10px 170px 10px 18px; /* Expanded right padding to fit icon + select */
+            padding: 10px 170px 10px 18px; /* Extra right padding for the custom selector space */
             font-size: 15px;
             border: none;
             border-radius: 24px;
@@ -76,29 +64,19 @@
         /* Focus state ring */
         .search-input:focus {
             background-color: #ffffff;
-            box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.6); /* Theme matched orange accent */
+            box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.6);
         }
 
-        /* Search Engine Dropdown Wrapper */
-        .engine-selector-wrapper {
+        /* Custom Dropdown Container Wrapper */
+        .custom-dropdown {
             position: absolute;
             right: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px; /* Space between dynamic icon and text dropdown */
+            user-select: none;
         }
 
-        /* Dynamic Favicon Indicator */
-        .engine-icon-indicator {
-            width: 16px;
-            height: 16px;
-            object-fit: contain;
-            pointer-events: none; /* Let clicks pass through to container */
-        }
-
-        /* Style for the select element */
-        .engine-select {
-            padding: 6px 24px 6px 6px;
+        /* The clickable block showing current engine selection */
+        .dropdown-trigger {
+            padding: 6px 14px;
             font-size: 13px;
             font-weight: 600;
             border: 1px solid #ccc;
@@ -106,108 +84,148 @@
             background-color: #f0f0f0;
             color: #333;
             cursor: pointer;
-            outline: none;
-            appearance: none; 
-            -webkit-appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 8px center;
-            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .engine-select:hover {
+        .dropdown-trigger:hover {
             background-color: #e5e5e5;
+        }
+
+        /* Tiny down chevron icon */
+        .dropdown-trigger::after {
+            content: "";
+            border: solid #333;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 2px;
+            transform: rotate(45deg);
+            margin-left: 2px;
+        }
+
+        /* Favicon Image formatting */
+        .engine-favicon {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+            border-radius: 2px;
+        }
+
+        /* Hidden pop-up overlay box */
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border: 1px solid #ddd;
+            overflow: hidden;
+            display: none; /* Managed by JS toggling */
+            flex-direction: column;
+            min-width: 140px;
+            z-index: 1001;
+        }
+
+        /* Class name applied by JS to reveal menu layout */
+        .dropdown-menu.show {
+            display: flex;
+        }
+
+        /* Individual selection row targets */
+        .dropdown-item {
+            padding: 10px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.15s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
         }
     </style>
 </head>
 <body>
 
-    <!-- Central Interactive Area -->
-    <div class="center-container">
-        
-        <!-- Live Digital Clock -->
-        <div id="clock" class="digital-clock">00:00:00</div>
-
-        <!-- Browser Search Bar -->
+    <!-- Browser Search Bar Overlay -->
+    <div class="browser-search-bar">
         <form id="searchForm" class="search-form" action="https://duckduckgo.com/" method="get" target="_blank">
-            
             <input type="text" id="searchInput" name="q" class="search-input" placeholder="Search the web..." required autocomplete="off" autofocus>
             
-            <div class="engine-selector-wrapper">
-                <!-- Favicon gets swapped here instantly by JavaScript -->
-                <select id="engineSelect" class="engine-select">
-                    <option value="duckduckgo">
-                        <img src="duckduckgo.png" class="engine-icon-indicator" alt="-">                        
-                        DuckDuckGo
-                    </option>
-                    <option value="brave">
-                        <img src="brave.png" class="engine-icon-indicator" alt="-">
-                        Brave
-                    </option>
-                    <option value="startpage">
-                        <img src="startpage.png" class="engine-icon-indicator" alt="-">
-                        Startpage
-                    </option>
-                </select>
+            <!-- Custom HTML / CSS dropdown allowing image integration -->
+            <div class="custom-dropdown">
+                <div class="dropdown-trigger" id="dropdownTrigger">
+                    <img src="https://duckduckgo.com/favicon.ico" class="engine-favicon" id="currentFavicon">
+                    <span id="currentText">DuckDuckGo</span>
+                </div>
+                
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div class="dropdown-item" data-value="ddg" data-url="https://duckduckgo.com/" data-param="q" data-icon="https://duckduckgo.com/favicon.ico">
+                        <img src="duckduckgo.png" class="engine-favicon"> DuckDuckGo
+                    </div>
+                    <div class="dropdown-item" data-value="brave" data-url="https://search.brave.com/search" data-param="q" data-icon="https://search.brave.com/favicon.ico">
+                        <img src="brave.png" class="engine-favicon"> Brave
+                    </div>
+                    <div class="dropdown-item" data-value="startpage" data-url="https://www.startpage.com/sp/search" data-param="query" data-icon="https://www.startpage.com/favicon.ico">
+                        <img src="startpage.png" class="engine-favicon"> Startpage
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 
     <script>
-        // --- 1. Clock Functionality ---
-        function updateClock() {
-            const now = new Date();
-            let hours = now.getHours();
-            let minutes = now.getMinutes();
-            let seconds = now.getSeconds();
-
-            // Format numbers to always have two digits (e.g., 03 instead of 3)
-            hours = hours < 10 ? '0' + hours : hours;
-            minutes = minutes < 10 ? '0' + minutes : minutes;
-            seconds = seconds < 10 ? '0' + seconds : seconds;
-
-            // Display time as HH:MM:SS
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
-        }
-
-        // Run clock immediately and set interval to update every second
-        updateClock();
-        setInterval(updateClock, 1000);
-
-
-        // --- 2. Search Engine Routing & Live Icon Swapping ---
         const form = document.getElementById('searchForm');
         const input = document.getElementById('searchInput');
-        const selector = document.getElementById('engineSelect');
-        const engineIcon = document.getElementById('engineIcon');
+        
+        // Custom drop components 
+        const trigger = document.getElementById('dropdownTrigger');
+        const menu = document.getElementById('dropdownMenu');
+        const currentFavicon = document.getElementById('currentFavicon');
+        const currentText = document.getElementById('currentText');
 
-        // Map your values directly to local file targets
-        const iconMap = {
-            ddg: 'duckduckgo.png',
-            brave: 'brave.png',
-            startpage: 'startpage.png'
-        };
+        // Track selected configurations state variables
+        let targetActionUrl = "https://duckduckgo.com/";
+        let targetParamName = "q";
 
-        // Changes the favicon indicator immediately when picking a new option
-        selector.addEventListener('change', function() {
-            const selectedEngine = selector.value;
-            engineIcon.src = iconMap[selectedEngine] || 'duckduckgo.png';
+        // Open/Close menu view box toggles
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menu.classList.toggle('show');
         });
 
-        // Configures action URLs and parameter keys right at form transmission
-        form.addEventListener('submit', function(event) {
-            const Engine = selector.value;
+        // Close dropdown context cleanly when hitting outside canvas zones
+        document.addEventListener('click', () => {
+            menu.classList.remove('show');
+        });
 
-            if (Engine === 'brave') {
-                form.action = "https://search.brave.com/search";
-                input.name = "q";
-            } else if (Engine === 'startpage') {
-                form.action = "https://www.startpage.com/sp/search";
-                input.name = "query";
-            } else {
-                form.action = "https://duckduckgo.com/";
-                input.name = "q";
-            }
+        // Option click handlers mapping config updates
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Update text, favicons in visual trigger button pane
+                currentText.textContent = this.textContent.trim();
+                currentFavicon.src = this.getAttribute('data-icon');
+
+                // Read routing metadata attributes to form dynamically values updates
+                targetActionUrl = this.getAttribute('data-url');
+                targetParamName = this.getAttribute('data-param');
+                
+                // Hide view block window
+                menu.classList.remove('show');
+                input.focus(); // Pull user cursor box highlight back into prompt area automatically
+            });
+        });
+
+        // Submit listener payload modification logic handles form queries
+        form.addEventListener('submit', function() {
+            form.action = targetActionUrl;
+            input.name = targetParamName;
         });
     </script>
 
