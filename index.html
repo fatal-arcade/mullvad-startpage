@@ -134,10 +134,10 @@
             
             <div class="engine-selector-wrapper">
                 <!-- Favicon gets swapped here instantly by JavaScript -->
-                <img id="engineIcon" src="ddg.png" class="engine-icon-indicator" alt="Engine Icon">
+                <img id="engineIcon" src="duckduckgo.png" class="engine-icon-indicator" alt="Engine Icon">
                 
                 <select id="engineSelect" class="engine-select">
-                    <option value="ddg">DuckDuckGo</option>
+                    <option value="duckduckgo">DuckDuckGo</option>
                     <option value="brave">Brave</option>
                     <option value="startpage">Startpage</option>
                 </select>
@@ -183,7 +183,7 @@
         // Changes the favicon indicator immediately when picking a new option
         selector.addEventListener('change', function() {
             const selectedEngine = selector.value;
-            engineIcon.src = iconMap[selectedEngine] || 'ddg.png';
+            engineIcon.src = iconMap[selectedEngine] || 'duckduckgo.png';
         });
 
         // Configures action URLs and parameter keys right at form transmission
