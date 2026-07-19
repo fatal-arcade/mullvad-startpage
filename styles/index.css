@@ -1,0 +1,147 @@
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    
+    background-image: url('../images/mbg.jpg');
+    background-color: #1f202c;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* Browser Search Bar Container */
+.browser-search-bar {
+    position: fixed;
+    top: 10%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Form wrapper styled as a pill */
+.search-form {
+    width: 90%;
+    max-width: 650px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background-color: rgba(30, 30, 30, 0.75);
+    backdrop-filter: blur(10px);
+    padding: 6px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Textfield Input */
+.search-input {
+    width: 100%;
+    padding: 10px 170px 10px 18px; /* Extra right padding for the custom selector space */
+    font-size: 15px;
+    border: none;
+    border-radius: 24px;
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #111;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+/* Focus state ring */
+.search-input:focus {
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.6);
+}
+
+/* Custom Dropdown Container Wrapper */
+.custom-dropdown {
+    position: absolute;
+    right: 12px;
+    user-select: none;
+}
+
+/* The clickable block showing current engine selection */
+.dropdown-trigger {
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid #ccc;
+    border-radius: 18px;
+    background-color: #f0f0f0;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.dropdown-trigger:hover {
+    background-color: #e5e5e5;
+}
+
+/* Tiny down chevron icon */
+.dropdown-trigger::after {
+    content: "";
+    border: solid #333;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 2px;
+    transform: rotate(45deg);
+    margin-left: 2px;
+}
+
+/* Favicon Image formatting */
+.engine-favicon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    border-radius: 2px;
+}
+
+/* Hidden pop-up overlay box */
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border: 1px solid #ddd;
+    overflow: hidden;
+    display: none; /* Managed by JS toggling */
+    flex-direction: column;
+    min-width: 140px;
+    z-index: 1001;
+}
+
+/* Class name applied by JS to reveal menu layout */
+.dropdown-menu.show {
+    display: flex;
+}
+
+/* Individual selection row targets */
+.dropdown-item {
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.15s;
+}
+
+.dropdown-item:hover {
+    background-color: #f5f5f5;
+}
